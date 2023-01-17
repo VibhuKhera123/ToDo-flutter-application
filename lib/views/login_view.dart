@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/main.dart';
+import 'package:todo_app/routes.dart';
 
 import '../firebase_options.dart';
 
@@ -33,75 +35,72 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("LogIn"),
+        title: const Text("Log In"),
       ),
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform),
-        builder: ((context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              return Column(
-                children: [
-                  TextField(
-                    controller: _email,
-                    decoration: const InputDecoration(
-                      hintText: "Enter your email",
-                      labelText: "Email",
-                    ),
-                    autocorrect: false,
-                    enableSuggestions: false,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  TextField(
-                    controller: _password,
-                    decoration: const InputDecoration(
-                      hintText: "Enter your password",
-                      labelText: "Password",
-                    ),
-                    obscureText: true,
-                    autocorrect: false,
-                    enableSuggestions: false,
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text("Register"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      final email = _email.text;
-                      final password = _password.text;
+      body: Column(
+        children: [
+          TextField(
+            controller: _email,
+            decoration: const InputDecoration(
+              hintText: "Enter your email",
+              labelText: "Email",
+            ),
+            autocorrect: false,
+            enableSuggestions: false,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          TextField(
+            controller: _password,
+            decoration: const InputDecoration(
+              hintText: "Enter your password",
+              labelText: "Password",
+            ),
+            obscureText: true,
+            autocorrect: false,
+            enableSuggestions: false,
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil(register, (route) => false);
+            },
+            child: const Text("Register"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;
 
-                      try {
-                        final userCredentials = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
-                      } on FirebaseAuthException catch (e) {
-                        switch (e.code) {
-                          case "user-not-found":
-                            print("User Not Found");
+              try {
+                final userCredentials =
+                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+                print(userCredentials);
+                setState(() {
+                  Navigator.pushNamed(context, homepage);
+                });
+              } on FirebaseAuthException catch (e) {
+                switch (e.code) {
+                  case "user-not-found":
+                    Navigator.pushNamed(context, register);
+                    print("User Not Found");
 
-                            break;
-                          case "wrong-password":
-                            print("wrong password");
-                            break;
+                    break;
+                  case "wrong-password":
+                    print("wrong password");
+                    break;
 
-                          default:
-                            print("something went wrong");
-                            break;
-                        }
-                      }
-                    },
-                    child: const Text("Log In"),
-                  )
-                ],
-              );
-            default:
-              return const Text("Loading");
-          }
-        }),
+                  default:
+                    print("something went wrong");
+                    break;
+                }
+              }
+            },
+            child: const Text("Log In"),
+          )
+        ],
       ),
     );
   }
