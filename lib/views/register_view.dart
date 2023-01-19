@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/routes.dart';
+import 'package:todo_app/srvices/auth/auth_exceptions.dart';
 
 import 'package:todo_app/utilities/show_error_dialog.dart';
 
@@ -67,40 +68,28 @@ class _RegisterViewState extends State<RegisterView> {
                 );
                 final user = FirebaseAuth.instance.currentUser;
                 user?.sendEmailVerification();
-                Navigator.of(context).pushNamed(emailverify);
-              } on FirebaseAuthException catch (e) {
-                switch (e.code) {
-                  case "weak-password":
-                    await showErrorDialog(
-                      context,
-                      "Weak Password",
-                    );
-
-                    break;
-                  case "email-already-in-use":
-                    await showErrorDialog(
-                      context,
-                      "Email already in use",
-                    );
-
-                    break;
-                  case "invalid-email":
-                    await showErrorDialog(
-                      context,
-                      "Invalid Email",
-                    );
-
-                    break;
-                  default:
-                    await showErrorDialog(
-                      context,
-                      "Error: ${e.code}",
-                    );
-                }
-              } catch (e) {
+                setState(() {
+                  Navigator.of(context).pushNamed(emailverify);
+                });
+              } on WeakPasswordAuthException {
                 await showErrorDialog(
                   context,
-                  e.toString(),
+                  "Weak Password",
+                );
+              } on EmailAlreadyInUseAuthException {
+                await showErrorDialog(
+                  context,
+                  "Email already in use",
+                );
+              } on InvalidEmailAuthException {
+                await showErrorDialog(
+                  context,
+                  "Invalid Email",
+                );
+              } on GenricAuthException {
+                await showErrorDialog(
+                  context,
+                  'Registration Error',
                 );
               }
             },

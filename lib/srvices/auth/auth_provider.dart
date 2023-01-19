@@ -1,6 +1,7 @@
 import 'package:todo_app/srvices/auth/auth_user.dart';
 
 abstract class AuthProvider {
+  Future<void> initilize();
   AuthUser? get currentUser;
   Future<AuthUser> login({
     required String email,

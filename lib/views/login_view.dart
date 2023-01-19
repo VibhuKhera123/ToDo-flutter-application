@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/routes.dart';
-
+import 'package:todo_app/srvices/auth/auth_exceptions.dart';
+import 'package:todo_app/srvices/auth/auth_services.dart';
 
 import 'package:todo_app/utilities/show_error_dialog.dart';
 
@@ -71,45 +71,28 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
-                final userCredentials =
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                await AuthService.firebase().login(
                   email: email,
                   password: password,
                 );
-                
+
                 setState(() {
                   Navigator.pushNamed(context, homepage);
                 });
-              } on FirebaseAuthException catch (e) {
-                switch (e.code) {
-                  case "user-not-found":
-                    await showErrorDialog(
-                      context,
-                      "User Not Found",
-                    );
-                   
-
-                    break;
-                  case "wrong-password":
-                    await showErrorDialog(
-                      context,
-                      "Incorrect Password!",
-                    );
-                    
-                    break;
-
-                  default:
-                    await showErrorDialog(
-                      context,
-                      "Error: ${e.code}",
-                    );
-                    
-                    break;
-                }
-              } catch (e) {
+              } on UserNotFoundAuthException {
                 await showErrorDialog(
                   context,
-                  e.toString(),
+                  "User Not Found",
+                );
+              } on WrongPasswordAuthException {
+                await showErrorDialog(
+                  context,
+                  "Incorrect Password!",
+                );
+              } on GenricAuthException {
+                await showErrorDialog(
+                  context,
+                  'Authentication Error',
                 );
               }
             },
