@@ -2,10 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/routes.dart';
 import 'package:todo_app/views/login_view.dart';
-import 'package:todo_app/views/new_notes_view.dart';
+import 'package:todo_app/views/notesView/create_update_notes_view.dart';
 import 'package:todo_app/views/register_view.dart';
 import 'home_page.dart';
-import 'views/notes_view.dart';
+import 'views/notesView/notes_view.dart';
 import 'views/verify_email_view.dart';
 
 void main() async {
@@ -22,8 +22,8 @@ void main() async {
       register: (context) => const RegisterView(),
       homepage: (context) => const HomePage(),
       emailverify: (context) => const VerifyEmailView(),
-      noteView:(context) => const NotesView(),
-      newNote:(context) => const NewNotesView(),
+      noteView: (context) => const NotesView(),
+      createUpdateNote: (context) => const CreateUpdateNoteView(),
     },
   ));
 }

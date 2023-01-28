@@ -3,4 +3,4 @@ const register = '/register/';
 const homepage = '/home/';
 const emailverify = '/verify/';
 const noteView = '/notes/';
-const newNote = '/newNote/';
+const createUpdateNote = '/newNote/';

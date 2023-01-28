@@ -3,7 +3,7 @@ import 'package:todo_app/routes.dart';
 import 'package:todo_app/srvices/auth/auth_services.dart';
 import 'package:todo_app/srvices/crud/notes_services.dart';
 import 'package:todo_app/utilities/dialog/logout_dialog.dart';
-import 'package:todo_app/views/notes_list_view.dart';
+import 'package:todo_app/views/notesView/notes_list_view.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({super.key});
@@ -30,7 +30,7 @@ class _NotesViewState extends State<NotesView> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(newNote);
+              Navigator.of(context).pushNamed(createUpdateNote);
             },
             icon: const Icon(Icons.add),
           ),
@@ -66,6 +66,12 @@ class _NotesViewState extends State<NotesView> {
                           notes: allNotes,
                           onDeleteNote: (note) async {
                             await _notesService.deleteNote(id: note.id);
+                          },
+                          onTap: (note) async {
+                            Navigator.of(context).pushNamed(
+                              createUpdateNote,
+                              arguments: note,
+                            );
                           },
                         );
                       } else {
