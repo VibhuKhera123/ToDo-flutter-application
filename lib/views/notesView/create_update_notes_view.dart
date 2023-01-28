@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:todo_app/srvices/auth/auth_services.dart';
-import 'package:todo_app/srvices/auth/auth_user.dart';
+
 import 'package:todo_app/srvices/crud/notes_services.dart';
 import 'package:todo_app/utilities/generics/get_argumnets.dart';
 
@@ -54,7 +52,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
       return existingNote;
     }
     final currentUser = AuthService.firebase().currentUser!;
-    final email = currentUser.email!;
+    final email = currentUser.email;
     final owner = await _notesService.getUser(email: email);
     final newNote = await _notesService.createNote(owner: owner);
     _note = newNote;

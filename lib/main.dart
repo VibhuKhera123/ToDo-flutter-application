@@ -4,7 +4,7 @@ import 'package:todo_app/routes.dart';
 import 'package:todo_app/views/login_view.dart';
 import 'package:todo_app/views/notesView/create_update_notes_view.dart';
 import 'package:todo_app/views/register_view.dart';
-import 'home_page.dart';
+import 'views/home_page.dart';
 import 'views/notesView/notes_view.dart';
 import 'views/verify_email_view.dart';
 
