@@ -38,7 +38,7 @@ class FirebaseAuthProvider implements AuthProvider {
         default:
           throw GenricAuthException();
       }
-    } catch (e) {
+    } catch (_) {
       throw GenricAuthException();
     }
   }

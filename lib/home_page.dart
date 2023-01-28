@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:todo_app/srvices/auth/auth_services.dart';
 import 'views/login_view.dart';
@@ -10,27 +9,28 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder(
-        future: AuthService.firebase().initilize(),
-        builder: ((context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-              final user = AuthService.firebase().currentUser;
-              if (user != null) {
-                if (user.isEmailVerified) {
-                  return const NotesView();
-                } else {
-                  return const VerifyEmailView();
-                }
+    return FutureBuilder(
+      future: AuthService.firebase().initilize(),
+      builder: ((context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final user = AuthService.firebase().currentUser;
+            if (user != null) {
+              print(user);
+              if (user.isEmailVerified) {
+                print("email verified");
+                return const NotesView();
               } else {
-                return const LoginView();
+                return const VerifyEmailView();
               }
-            default:
-              return const CircularProgressIndicator();
-          }
-        }),
-      ),
+            } else {
+              return const LoginView();
+            }
+
+          default:
+            return const CircularProgressIndicator();
+        }
+      }),
     );
   }
 }
