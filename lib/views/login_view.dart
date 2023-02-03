@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/routes.dart';
 import 'package:todo_app/srvices/auth/auth_exceptions.dart';
 import 'package:todo_app/srvices/auth/auth_services.dart';
+import 'package:todo_app/srvices/auth/bloc/auth_bloc.dart';
+import 'package:todo_app/srvices/auth/bloc/auth_events.dart';
+import 'package:todo_app/srvices/auth/bloc/bloc_states.dart';
 import 'package:todo_app/utilities/dialog/error_dialog.dart';
-
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -65,38 +68,30 @@ class _LoginViewState extends State<LoginView> {
             },
             child: const Text("Register"),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              final email = _email.text;
-              final password = _password.text;
-
-              try {
-                await AuthService.firebase().login(
-                  email: email,
-                  password: password,
-                );
-
-                setState(() {
-                  Navigator.pushNamed(context, homepage);
-                });
-              } on UserNotFoundAuthException {
-                await showErrorDialog(
-                  context,
-                  "User Not Found",
-                );
-              } on WrongPasswordAuthException {
-                await showErrorDialog(
-                  context,
-                  "Incorrect Password!",
-                );
-              } on GenricAuthException {
-                await showErrorDialog(
-                  context,
-                  'Authentication Error',
-                );
+          BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) async {
+              if (state is AuthStateLoggedOut) {
+                if ((state.exception is UserNotFoundAuthException) || (state.exception is WrongPasswordAuthException)) {
+                  await showErrorDialog(context, 'Wrong Credentials!');
+                } 
+                 else if (state.exception is GenricAuthException) {
+                  await showErrorDialog(context, 'Authentication Error');
+                }
               }
             },
-            child: const Text("Log In"),
+            child: ElevatedButton(
+              onPressed: () async {
+                final email = _email.text;
+                final password = _password.text;
+                context.read<AuthBloc>().add(
+                      AuthEventLogIn(
+                        email,
+                        password,
+                      ),
+                    );
+              },
+              child: const Text("Log In"),
+            ),
           )
         ],
       ),
