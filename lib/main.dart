@@ -19,16 +19,11 @@ void main() async {
     theme: ThemeData(
       primarySwatch: Colors.blue,
     ),
-    home:  BlocProvider<AuthBloc>(
+    home: BlocProvider<AuthBloc>(
       create: (context) => AuthBloc(FirebaseAuthProvider()),
       child: const HomePage(),
     ),
     routes: {
-      login: (context) => const LoginView(),
-      register: (context) => const RegisterView(),
-      homepage: (context) => const HomePage(),
-      emailverify: (context) => const VerifyEmailView(),
-      noteView: (context) => const NotesView(),
       createUpdateNote: (context) => const CreateUpdateNoteView(),
     },
   ));
