@@ -4,11 +4,24 @@ import 'package:todo_app/srvices/auth/bloc/auth_events.dart';
 import 'package:todo_app/srvices/auth/bloc/bloc_states.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(AuthProvider provider) : super(const AuthStateUninitilized()) {
+  AuthBloc(AuthProvider provider)
+      : super(const AuthStateUninitilized(
+          isLoading: true,
+        )) {
     on<AuthEventSentEmailVerification>(
       (event, emit) async {
         await provider.sendEmailVerification();
         emit(state);
+      },
+    );
+    on<AuthEventShouldRegister>(
+      (event, emit) {
+        emit(
+          const AuthStateRegistering(
+            isLoading: false,
+            exception: null,
+          ),
+        );
       },
     );
     on<AuthEventRegister>(
@@ -21,12 +34,51 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             password: password,
           );
           await provider.sendEmailVerification();
-          emit(const AuthStateNeedVerification());
+          emit(const AuthStateNeedVerification(isLoading: false));
         } on Exception catch (e) {
           emit(
-            AuthStateRegistering(e),
+            AuthStateRegistering(
+              exception: e,
+              isLoading: false,
+            ),
           );
         }
+      },
+    );
+
+    on<AuthEventForgotPassword>(
+      (event, emit) async {
+        emit(const AuthStateForgotPassword(
+          exception: null,
+          hasSentEmail: false,
+          isLoading: false,
+        ));
+        final email = event.email;
+        if (email == null) {
+          return; //user just want to go to the forgot password screen
+        }
+
+        //user wants to get the email
+        emit(const AuthStateForgotPassword(
+          exception: null,
+          hasSentEmail: false,
+          isLoading: true,
+        ));
+        Exception? exception;
+        bool didSendEmail;
+        try {
+          await provider.sendPasswordReset(toEmail: email);
+          didSendEmail = true;
+          exception = null;
+        } on Exception catch (e) {
+          didSendEmail = false;
+          exception = e;
+        }
+        emit(AuthStateForgotPassword(
+          exception: exception,
+          hasSentEmail: didSendEmail,
+          isLoading: false,
+        ));
       },
     );
     on<AuthEventInitilize>((event, emit) async {
@@ -35,13 +87,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = provider.currentUser;
       if (user == null) {
         emit(const AuthStateLoggedOut(
-          exception: null,
+            exception: null, isLoading: false, loadingText: 'Logging In'));
+      } else if (!user.isEmailVerified) {
+        emit(const AuthStateNeedVerification(isLoading: false));
+      } else {
+        emit(AuthStateLoggedIn(
+          user: user,
           isLoading: false,
         ));
-      } else if (!user.isEmailVerified) {
-        emit(const AuthStateNeedVerification());
-      } else {
-        emit(AuthStateLoggedIn(user));
       }
     });
     //login
@@ -67,7 +120,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 isLoading: false,
               ),
             );
-            emit(const AuthStateNeedVerification());
+            emit(const AuthStateNeedVerification(isLoading: false));
           } else {
             emit(
               const AuthStateLoggedOut(
@@ -75,7 +128,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 isLoading: false,
               ),
             );
-            emit(AuthStateLoggedIn(user));
+            emit(AuthStateLoggedIn(
+              user: user,
+              isLoading: false,
+            ));
           }
         } on Exception catch (e) {
           emit(AuthStateLoggedOut(

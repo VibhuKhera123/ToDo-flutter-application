@@ -4,12 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/routes.dart';
 import 'package:todo_app/srvices/auth/bloc/auth_bloc.dart';
 import 'package:todo_app/srvices/auth/firebase_auth_provider.dart';
-import 'package:todo_app/views/login_view.dart';
 import 'package:todo_app/views/notesView/create_update_notes_view.dart';
-import 'package:todo_app/views/register_view.dart';
 import 'views/home_page.dart';
-import 'views/notesView/notes_view.dart';
-import 'views/verify_email_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
