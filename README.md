@@ -1,16 +1,28 @@
-# todo_app
+This is a flutter TODO list application
 
-A new Flutter project.
+The Appliction starts with a splash screen:
+![splash screen](https://github.com/VibhuKhera123/ToDo-flutter-application/assets/111462793/8ff5462f-20ef-45f1-b62d-9de394dd513b)
 
-## Getting Started
+Authentication
 
-This project is a starting point for a Flutter application.
+The appliction uses email authentication with firebase.
 
-A few resources to get you started if this is your first Flutter project:
+Registration Screen:-
+![Register Screen](https://github.com/VibhuKhera123/ToDo-flutter-application/assets/111462793/95ec81e1-ec25-4118-9b76-5d2f25a46cdd)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Login Screen:-
+![Login page](https://github.com/VibhuKhera123/ToDo-flutter-application/assets/111462793/ea363518-6d8d-47ab-940b-c5b648fae97a)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Logout Confermation:-
+![logout ](https://github.com/VibhuKhera123/ToDo-flutter-application/assets/111462793/742faeb1-4e77-460f-a38e-1c35d0c4d176)
+
+This appliction also allows to share the notes with other only if the text is not null
+
+Create Update and Share notes:-
+![update notes](https://github.com/VibhuKhera123/ToDo-flutter-application/assets/111462793/72ebc2d3-8d33-4267-9df9-3dff925b92a1)
+
+![splash screen](https://github.com/VibhuKhera123/ToDo-flutter-application/assets/111462793/8ff5462f-20ef-45f1-b62d-9de394dd513b)
+
+
+Home screen also has a button to delete the note
+![home screen](https://github.com/VibhuKhera123/ToDo-flutter-application/assets/111462793/7a06b1f6-13e4-4d72-a2f7-844d0d365c62)
